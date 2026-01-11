@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>学習アプリ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+<body>
+
+  <h1>学習アプリ</h1>
+
+  <!-- ============================
+       タブ切り替え
+  ============================= -->
+  <div id="tabs">
+    <button class="tab-btn" data-target="textScreen">テキスト</button>
+    <button class="tab-btn" data-target="quizScreen">問題</button>
+  </div>
+
+  <!-- ============================
+       テキスト画面
+  ============================= -->
+  <div id="textScreen">
+
+    <h2>テキスト表示</h2>
+
+    <label>章を選択：</label>
+    <div class="select-wrapper">
+      <select id="chapterSelect"></select>
+    </div> <button id="loadBtn">読み込む</button>
+
+    <div id="content" style="margin-top:20px;"></div>
+
+    <h3>メモ</h3>
+    <textarea id="memo" rows="6" style="width:100%;"></textarea>
+    <button id="saveMemoBtn">メモを保存</button>
+
+  </div>
+
+  <!-- ============================
+       問題画面
+  ============================= -->
+  <div id="quizScreen" style="display:none;">
+
+    <h2>4択問題</h2>
+
+    <div id="questionCount" style="font-weight:bold; margin-bottom:5px;"></div>
+    <div id="progress" style="font-weight:bold; margin-bottom:10px;"></div>
+
+    <button id="loadQuestionByChapterBtn">この章の問題を出題</button>
+
+    <div id="questionArea" class="question-card"></div>
+    <div id="choicesArea"></div>
+
+    <div id="resultArea" style="margin-top:15px; font-weight:bold;"></div>
+    <div id="explanationArea" style="margin-top:10px;"></div>
+
+    <button id="nextQuestionBtn" style="display:none; margin-top:20px;">次の問題へ</button>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
