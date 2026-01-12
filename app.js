@@ -1,22 +1,21 @@
 // ------------------------------
 // 章一覧を JSON から読み込んで生成
 // ------------------------------
-async function loadChapterList() {
-  const res = await fetch("data/chapters.json");
-  const data = await res.json();
+function loadChapterList() {
+  fetch("data/chapters.json")
+    .then(res => res.json())
+    .then(chapters => {
+      const select = document.getElementById("chapterSelect");
+      select.innerHTML = "";
 
-  const select = document.getElementById("chapterSelect");
-  select.innerHTML = ""; // 初期化
-
-  data.chapters.forEach(ch => {
-    const option = document.createElement("option");
-    option.value = ch.file;
-    option.textContent = ch.title;
-    select.appendChild(option);
-  });
-}
-
-// 初期化
+      chapters.forEach(ch => {
+        const option = document.createElement("option");
+        option.value = ch.id;
+        option.textContent = ch.title;
+        select.appendChild(option);
+      });
+    });
+}// 初期化
 loadChapterList();
 
 
@@ -26,14 +25,13 @@ loadChapterList();
 document.getElementById("loadBtn").addEventListener("click", async () => {
   const chapter = document.getElementById("chapterSelect").value;
 
-  const res = await fetch(`texts/${chapter}`);
+  const res = await fetch(`texts/chapter${chapter}.md`);
   const md = await res.text();
 
   document.getElementById("content").innerHTML = marked.parse(md);
 
   loadMemo(chapter);
 });
-
 
 // ------------------------------
 // メモ保存
@@ -69,9 +67,9 @@ let correctCount = 0;
 // ------------------------------
 // 章を選んだら問題数を表示
 // ------------------------------
-document.getElementById("chapterSelect").addEventListener("change", async () => {
-  const chapter = document.getElementById("chapterSelect").value;
-  const chapterId = parseInt(chapter.replace("chapter", "").replace(".md", ""));
+document.getElementById("chapterSelect").addEventListener("change", async (e) => {
+  const chapterId = Number(e.target.value);
+  loadChapter(chapterId);
 
   const res = await fetch("data/questions.json");
   const data = await res.json();
@@ -82,6 +80,13 @@ document.getElementById("chapterSelect").addEventListener("change", async () => 
     `この章の問題数：${filtered.length}問`;
 });
 
+function loadChapter(chapterId) {
+  fetch(`texts/chapter${chapterId}.md`)
+    .then(res => res.text())
+    .then(md => {
+      document.getElementById("text-content").innerHTML = marked.parse(md);
+    });
+}
 
 // ------------------------------
 // 章ごとに問題を読み込む
@@ -233,4 +238,8 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadChapterList();
 });
