@@ -1,5 +1,1 @@
-ECHO は <ON> です。
-ECHO は <ON> です。
-ECHO は <ON> です。
-ECHO は <ON> です。
-ECHO は <ON> です。
+aaa
